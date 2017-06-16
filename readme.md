@@ -1,1 +1,1 @@
-Follow the instructions for your PAL course.
+This is the solution for the Spring Boot App lab.
