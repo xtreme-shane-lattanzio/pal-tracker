@@ -1,1 +1,1 @@
-This is the solution for the Spring Boot App lab.
+This is the starting point for the Cloud Foundry lab.
