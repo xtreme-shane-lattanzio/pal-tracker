@@ -1,1 +1,1 @@
-This is the starting point for the Cloud Foundry lab.
+This is the solution for the Cloud Foundry lab.

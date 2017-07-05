@@ -21,7 +21,7 @@ public class PalTrackerTest {
     @Test
     public void exampleTest() {
         String body = this.restTemplate.getForObject("/", String.class);
-        assertThat(body).isEqualTo("hello");
+        assertThat(body).isEqualTo("hello from env");
     }
 
 }
