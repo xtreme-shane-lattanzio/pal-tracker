@@ -1,1 +1,1 @@
-This is the solution for the Concourse lab.
+This is the starting point for the pipelines lab.
