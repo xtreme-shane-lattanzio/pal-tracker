@@ -31,6 +31,11 @@ http://pal-tracker-massless-overvehementness.apps.quandary.pal.pivotal.io/
 http://sl-pal-tracker-review.apps.quandary.pal.pivotal.io/
 http://sl-pal-tracker-production.apps.quandary.pal.pivotal.io/
 
+
+mysql -u root
+use tracker_dev;
+describe time_entries;
+
 cf target -s review
 cf create-service p-mysql 100mb tracker-database 
 cf bind-service pal-tracker-review tracker-database
