@@ -1,0 +1,39 @@
+cf login -a https://api.sys.quandary.pal.pivotal.io --skip-ssl-validation
+
+./gradlew clean build
+cf push pal-tracker -p build/libs/pal-tracker.jar
+
+cf logs --recent pal-tracker
+
+cf push -f manifest.yml
+
+
+Memory- cf scale pal-tracker -m 512M -f
+
+Instanses - cf scale pal-tracker -m 512M -f
+
+cf domains
+
+cf map-route pal-tracker --hostname pal-tracker-<YOUR INITIALS>-dev <DOMAIN>
+cf unmap-route pal-tracker --hostname pal-tracker-<YOUR INITIALS>-dev <DOMAIN>
+
+cf create-space review -o <YOUR ORG NAME>
+
+Concourse
+Set target to URL - fly --target pal-concourse login --concourse-url <CONCOURSE_URL>
+
+Execute task - fly -t pal-concourse execute --config ci/tasks/build.yml
+
+Run with credentials - fly -t pal-concourse set-pipeline --config ci/pipeline.yml --pipeline pal-tracker-[your name] --load-vars-from ci/credentials.yml
+
+
+http://pal-tracker-massless-overvehementness.apps.quandary.pal.pivotal.io/
+http://sl-pal-tracker-review.apps.quandary.pal.pivotal.io/
+http://sl-pal-tracker-production.apps.quandary.pal.pivotal.io/
+
+cf target -s review
+cf create-service p-mysql 100mb tracker-database 
+cf bind-service pal-tracker-review tracker-database
+cf env pal-tracker-review
+cf ssh -N -L 63306:10.0.4.41:3306 pal-tracker-review
+flyway -url="jdbc:mysql://127.0.0.1:63306/cf_e4ec34d4_62ab_470c_a702_ae059be10d21" -locations=filesystem:databases/tracker clean migrate

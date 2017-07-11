@@ -16,7 +16,7 @@ public class TimeEntriesController {
 
     private TimeEntryRepository repository;
 
-    public TimeEntriesController(TimeEntryRepository repository) {
+    public TimeEntriesController(JdbcTimeEntryRepository repository) {
         this.repository = repository;
     }
 

@@ -1,5 +1,6 @@
 package io.pivotal.pal.trackertest;
 
+import io.pivotal.pal.tracker.JdbcTimeEntryRepository;
 import io.pivotal.pal.tracker.TimeEntriesController;
 import io.pivotal.pal.tracker.TimeEntry;
 import io.pivotal.pal.tracker.TimeEntryRepository;
@@ -22,12 +23,12 @@ import static org.mockito.Mockito.verify;
  * Created by pivotal on 2017-07-11.
  */
 public class TimeEntriesControllerTest {
-    TimeEntryRepository timeEntryRepository;
+    JdbcTimeEntryRepository timeEntryRepository;
     TimeEntriesController controller;
 
     @Before
     public void setUp() throws Exception {
-        timeEntryRepository = mock(TimeEntryRepository.class);
+        timeEntryRepository = mock(JdbcTimeEntryRepository.class);
         controller = new TimeEntriesController(timeEntryRepository);
     }
 
