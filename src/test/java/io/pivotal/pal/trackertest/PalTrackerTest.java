@@ -42,7 +42,8 @@ public class PalTrackerTest {
 
         RestTemplateBuilder builder = new RestTemplateBuilder()
                 .rootUri("http://localhost:" + port)
-                .basicAuthorization("user", "password");
+                .basicAuthorization("user", "password")
+                .basicAuthorization("shane", "woot");
 
         restTemplate = new TestRestTemplate(builder);
 
