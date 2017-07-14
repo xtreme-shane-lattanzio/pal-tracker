@@ -1,3 +1,5 @@
+brew install cloudfoundry/tap/cf-cli
+
 cf login -a https://api.sys.quandary.pal.pivotal.io --skip-ssl-validation
 
 ./gradlew clean build
@@ -42,3 +44,5 @@ cf bind-service pal-tracker-review tracker-database
 cf env pal-tracker-review
 cf ssh -N -L 63306:10.0.4.41:3306 pal-tracker-review
 flyway -url="jdbc:mysql://127.0.0.1:63306/cf_e4ec34d4_62ab_470c_a702_ae059be10d21" -locations=filesystem:databases/tracker clean migrate
+
+test build - fly -t pal-concourse execute --config ci/tasks/build.yml --input pal-tracker=. --input version=.
