@@ -20,12 +20,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         }
 
         http.authorizeRequests().antMatchers("/**").hasRole("USER").and().httpBasic().and().csrf().disable();
-        http.authorizeRequests().antMatchers("/**").hasRole("ADMIN").and().httpBasic().and().csrf().disable();
+        http.authorizeRequests().antMatchers("/**").hasAnyRole("ADMIN", "ACTUATOR").and().httpBasic().and().csrf().disable();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser("user").password("password").roles("USER");
-        auth.inMemoryAuthentication().withUser("shane").password("woot").roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("shane").password("woot").roles("ADMIN", "ACTUATOR");
     }
 }
