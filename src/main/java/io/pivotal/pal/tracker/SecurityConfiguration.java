@@ -19,8 +19,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             http.requiresChannel().anyRequest().requiresSecure();
         }
 
-        http.authorizeRequests().antMatchers("/**").hasRole("USER").and().httpBasic().and().csrf().disable();
-        http.authorizeRequests().antMatchers("/**").hasAnyRole("ADMIN", "ACTUATOR").and().httpBasic().and().csrf().disable();
+        http.authorizeRequests().antMatchers("/**").hasAnyRole("USER", "ADMIN", "ACTUATOR").and().httpBasic().and().csrf().disable();
     }
 
     @Autowired
