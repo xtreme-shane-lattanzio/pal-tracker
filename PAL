@@ -46,3 +46,35 @@ cf ssh -N -L 63306:10.0.4.41:3306 pal-tracker-review
 flyway -url="jdbc:mysql://127.0.0.1:63306/cf_e4ec34d4_62ab_470c_a702_ae059be10d21" -locations=filesystem:databases/tracker clean migrate
 
 test build - fly -t pal-concourse execute --config ci/tasks/build.yml --input pal-tracker=. --input version=.
+
+
+
+
+
+Create AWS account
+Use bosh to create a load balanced concourse URL
+Use fly to set concourse to target the URL
+Create a pipeline to pull from the repository
+Deploy the files using cloudfoundry using conourse built in cf support
+
+bosh create-env concourse.yml \
+  -o infrastructures/gcp.yml \
+  --vars-store gcp-creds.yml \
+  --state gcp-state.json \
+  -v gcp_credentials_json="'$gcp_credentials_json'" \
+  -v internal_cidr=10.0.0.0/9\
+  -v internal_gw=10.0.0.1	 \
+  -v internal_ip=10.0.0.6\
+  -v public_ip=35.185.64.185\
+  -v network=shaneconcoursetest \
+  -v project_id=labs-aleung \
+  -v subnetwork=concoursetest \
+  -v tags=shaneconcoursetest\
+  -v zone=us-east1-c
+
+bbl up --state-dir ~/my-bbl-states/concourse/ \
+       --gcp-zone us-west1-a --gcp-region us-west1 \
+       --gcp-service-account-key service-account.key.json \
+       --gcp-project-id my-project-14478532 \
+       --iaas gcp --name concourse \
+       --no-director
