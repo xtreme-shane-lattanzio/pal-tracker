@@ -51,8 +51,8 @@ test build - fly -t pal-concourse execute --config ci/tasks/build.yml --input pa
 
 
 
-Create AWS account
-Use bosh to create a load balanced concourse URL
+Create GCP account
+#Use bosh to create a load balanced concourse URL
 Use fly to set concourse to target the URL
 Create a pipeline to pull from the repository
 Deploy the files using cloudfoundry using conourse built in cf support
@@ -61,7 +61,8 @@ bosh create-env concourse.yml \
   -o infrastructures/gcp.yml \
   --vars-store gcp-creds.yml \
   --state gcp-state.json \
-  -v gcp_credentials_json="'$gcp_credentials_json'" \
+  --var-file gcp_credentials_json=~/Workspace/testconcourse/Labs-aleung-ad23c33108e9.json \
+  #-v gcp_credentials_json="'$gcp_credentials_json'" \
   -v internal_cidr=10.0.0.0/9\
   -v internal_gw=10.0.0.1	 \
   -v internal_ip=10.0.0.6\
@@ -69,12 +70,10 @@ bosh create-env concourse.yml \
   -v network=shaneconcoursetest \
   -v project_id=labs-aleung \
   -v subnetwork=concoursetest \
-  -v tags=shaneconcoursetest\
+  -v tags=[internal]\
   -v zone=us-east1-c
 
-bbl up --state-dir ~/my-bbl-states/concourse/ \
-       --gcp-zone us-west1-a --gcp-region us-west1 \
-       --gcp-service-account-key service-account.key.json \
-       --gcp-project-id my-project-14478532 \
-       --iaas gcp --name concourse \
-       --no-director
+fly --target main login --concourse-url http://35.185.64.185:8080 --insecure
+fly --target pal-concourse login --concourse-url http://35.185.64.185:8080/ --team-name slattanzio --insecure
+
+ fly -t main hijack -j pal-tracker-slattanzio/deploy-review
