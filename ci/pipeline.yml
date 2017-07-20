@@ -28,7 +28,6 @@ resources:
     access_key_id: {{gcs-access-key-id}}
     secret_access_key: {{gcs-secret-access-key}}
 
-
 - name: review-deployment
   type: cf
   source:
