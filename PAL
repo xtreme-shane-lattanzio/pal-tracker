@@ -48,13 +48,18 @@ flyway -url="jdbc:mysql://127.0.0.1:63306/cf_e4ec34d4_62ab_470c_a702_ae059be10d2
 test build - fly -t pal-concourse execute --config ci/tasks/build.yml --input pal-tracker=. --input version=.
 
 
-
-
-
 Create GCP account
-#Use bosh to create a load balanced concourse URL
+Create a static ip
+Create network and subnet
+Create firewall rules
+Choose a zone
+Tags is a list
+Either use -v for credentials json contents in GOOGLE_CREDENTIALS or the file itselt in GOOGLE_APPLICATION_CREDENTIALS
+Also can use -var-file instead to give a path
+
+Run bosh to deploy vms
 Use fly to set concourse to target the URL
-Create a pipeline to pull from the repository
+Create a pipeline to pull from the repository and run builds
 Deploy the files using cloudfoundry using conourse built in cf support
 
 bosh create-env concourse.yml \
@@ -73,7 +78,7 @@ bosh create-env concourse.yml \
   -v tags=[internal]\
   -v zone=us-east1-c
 
-fly --target main login --concourse-url http://35.185.64.185:8080 --insecure
+fly --target pal-concourse login --concourse-url http://35.185.64.185:8080 --insecure
 fly --target pal-concourse login --concourse-url http://35.185.64.185:8080/ --team-name slattanzio --insecure
 fly -t pal-concourse set-pipeline --config ci/pipeline.yml --pipeline pal-tracker-slattanzio --load-vars-from ci/credentials.yml
 fly -t pal-concourse set-pipeline --config ci/pipeline.yml --pipeline pal-tracker-distributed-slattanzio --load-vars-from ci/variables.yml
