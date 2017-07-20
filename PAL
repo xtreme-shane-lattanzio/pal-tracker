@@ -75,5 +75,7 @@ bosh create-env concourse.yml \
 
 fly --target main login --concourse-url http://35.185.64.185:8080 --insecure
 fly --target pal-concourse login --concourse-url http://35.185.64.185:8080/ --team-name slattanzio --insecure
+fly -t pal-concourse set-pipeline --config ci/pipeline.yml --pipeline pal-tracker-slattanzio --load-vars-from ci/credentials.yml
+fly -t pal-concourse set-pipeline --config ci/pipeline.yml --pipeline pal-tracker-distributed-slattanzio --load-vars-from ci/variables.yml
 
- fly -t main hijack -j pal-tracker-slattanzio/deploy-review
+fly -t main hijack -j pal-tracker-slattanzio/deploy-review

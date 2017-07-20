@@ -16,7 +16,7 @@ resources:
   type: google-cloud-storage
   source:
     bucket: {{gcs-bucket}}
-    regexp: releases/pal-tracker-(.*).jar
+    regexp: releases/pal-tracker/pal-tracker-(.*).jar
     json_key: {{gcs-json}}
       
 - name: version
