@@ -1,3 +1,5 @@
+https://api.sys.quandary.pal.pivotal.io
+
 brew install cloudfoundry/tap/cf-cli
 
 cf login -a https://api.sys.quandary.pal.pivotal.io --skip-ssl-validation
@@ -33,6 +35,8 @@ http://pal-tracker-massless-overvehementness.apps.quandary.pal.pivotal.io/
 http://sl-pal-tracker-review.apps.quandary.pal.pivotal.io/
 http://sl-pal-tracker-production.apps.quandary.pal.pivotal.io/
 
+cf scale pal-tracker -m 512M -f
+cf scale pal-tracker -i 2
 
 mysql -u root
 use tracker_dev;
@@ -47,16 +51,27 @@ flyway -url="jdbc:mysql://127.0.0.1:63306/cf_e4ec34d4_62ab_470c_a702_ae059be10d2
 
 test build - fly -t pal-concourse execute --config ci/tasks/build.yml --input pal-tracker=. --input version=.
 
+Self Study
+https://github.com/concourse/concourse-deployment
+https://github.com/pivotalservices/concourse-pipeline-samples/tree/master/google-cloud-storage-integration
+https://github.com/GoogleCloudPlatform/gcp-service-broker/blob/master/ci/pipeline.yml
+https://github.com/cloudfoundry-incubator/bosh-google-cpi-release/tree/master/docs/bosh (GCP setup)
 
+Get bosh CLI v2
 Create GCP account
-Create a static ip
+Create PWS account
+Create a static (external) ip
 Create network and subnet
 Create firewall rules
 Choose a zone
 Tags is a list
-Either use -v for credentials json contents in GOOGLE_CREDENTIALS or the file itselt in GOOGLE_APPLICATION_CREDENTIALS
+Generate credentials json
+In storage settings, create an interop key to use for concourse
+Create a bucket for files
+Either use -v for credentials json contents in GOOGLE_CREDENTIALS or the file itself in GOOGLE_APPLICATION_CREDENTIALS
 Also can use -var-file instead to give a path
 
+Change concourse yml for basic auth and remove https certs
 Run bosh to deploy vms
 Use fly to set concourse to target the URL
 Create a pipeline to pull from the repository and run builds
@@ -67,7 +82,6 @@ bosh create-env concourse.yml \
   --vars-store gcp-creds.yml \
   --state gcp-state.json \
   --var-file gcp_credentials_json=~/Workspace/testconcourse/Labs-aleung-ad23c33108e9.json \
-  #-v gcp_credentials_json="'$gcp_credentials_json'" \
   -v internal_cidr=10.0.0.0/9\
   -v internal_gw=10.0.0.1	 \
   -v internal_ip=10.0.0.6\
@@ -77,6 +91,7 @@ bosh create-env concourse.yml \
   -v subnetwork=concoursetest \
   -v tags=[internal]\
   -v zone=us-east1-c
+  #-v gcp_credentials_json="'$gcp_credentials_json'" \
 
 fly --target pal-concourse login --concourse-url http://35.185.64.185:8080 --insecure
 fly --target pal-concourse login --concourse-url http://35.185.64.185:8080/ --team-name slattanzio --insecure
@@ -84,3 +99,28 @@ fly -t pal-concourse set-pipeline --config ci/pipeline.yml --pipeline pal-tracke
 fly -t pal-concourse set-pipeline --config ci/pipeline.yml --pipeline pal-tracker-distributed-slattanzio --load-vars-from ci/variables.yml
 
 fly -t main hijack -j pal-tracker-slattanzio/deploy-review
+
+mvn spring-boot:run
+minio server ~/shared
+mvn clean package -DskipTests -Dmaven.test.skip=true
+MOVIE_FUN_URL=http://moviefun-example.cfapps.io mvn test
+mvn spring-boot:run
+cf push moviefun -p target/moviefun.war -b https://github.com/cloudfoundry/java-buildpack.git
+http://moviefun-chronological-imbruement.apps.longs.pal.pivotal.io/
+
+ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+$ export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+$ export AWS_DEFAULT_REGION=us-west-2
+
+aws s3 cp file.txt s3://my-bucket/
+
+https://pivotal-rabbitmq.sys.longs.pal.pivotal.io/#/queues/e753d8df-1482-4482-b4ce-5de682e74839/my-rabbit-queue
+
+Minio is mocking AWS
+
+curl -X POST http://localhost:8080/rabbit -d ""
+
+http://remove-session-state-inviolable-princeship.apps.longs.pal.pivotal.io/ Instances- Redis is Session mangement. nginx is a load balancer
+mvn -Dmaven.tomcat.port=8080 -DinstanceNumber=1 tomcat7:run-war
+
+http://struts-nondeprecative-op.apps.longs.pal.pivotal.io/ Find User Bootification
